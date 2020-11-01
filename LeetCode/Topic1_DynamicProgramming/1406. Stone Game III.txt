@@ -1,0 +1,19 @@
+class Solution:
+    # 刚开始就学dp太难了，抄答案的
+    def stoneGameIII(self, stoneValue: List[int]) -> str:
+        @functools.lru_cache(None)
+        def helper(i):
+
+            if i == len(stoneValue):
+                return 0
+
+            options = []
+            take = 0
+            for j in range(i, min(i+3, len(stoneValue))):
+                take += stoneValue[j]
+                options.append(take - helper(j+1))
+            return max(options)
+
+        res = helper(0)
+
+        return "Alice" if res > 0 else "Bob" if res < 0 else "Tie"
