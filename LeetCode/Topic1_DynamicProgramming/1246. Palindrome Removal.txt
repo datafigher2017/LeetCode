@@ -1,0 +1,12 @@
+class Solution:
+    def minimumMoves(self, arr: List[int]) -> int:
+        dp = [[0] * len(arr) for _ in range(len(arr))]
+        for j in range(len(arr)):
+            for i in range(j, -1, -1):
+                r = len(arr)
+                if arr[i] == arr[j]:
+                    r = 1 if i + 1 > j - 1 or dp[i+1][j-1] == 0 else dp[i+1][j-1]
+                for k in range(i, j):
+                    r = min(r, dp[i][k] + dp[k+1][j])
+                dp[i][j] = r
+        return dp[0][len(arr)-1]  
