@@ -1,0 +1,30 @@
+class Solution:
+    def maxStudents(self, seats: List[List[str]]) -> int:
+        m = len(seats)
+        n = len(seats[0])
+        validPos = [0]*m
+        for i in range(m):
+            for j in range(n):
+                validPos[i] |= (1<<j) if seats[i][j] == "." else 0
+        
+        def bit_count(n):
+            count = 0
+            while n:
+                n &= n - 1
+                count += 1
+            return count
+            
+        @lru_cache(None)
+        def backTrack(takenRows, currRow):
+            # print(count, takenRows, currRows, rowIdx)
+            if currRow == m:
+                return 0
+            res = 0
+    
+            for state in range(1<<n):
+                if (state & validPos[currRow] == state) and (state & (state<<1) == 0):
+                    if (takenRows<<1) & state == 0 and (state<<1) & takenRows == 0:
+                        res = max(res, bit_count(state) + backTrack(state, currRow+1))
+            return res
+        
+        return backTrack(0, 0)        
