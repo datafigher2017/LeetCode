@@ -1,0 +1,34 @@
+class Solution:
+    def numberWays(self, hats: List[List[int]]) -> int:
+        # 改用 n=hats.size() < 40 人数来做state，减少time cost
+        num_people = len(hats)
+        N = (1 << num_people)
+        dp = [0] * N
+        htop = [[] for i in range(41)]
+        M = 10 ** 9 + 7
+        
+        # 建立hashmap 来显示每顶帽子可以带的人  htop: hat to ppl
+        for p, prefer_hats in enumerate(hats):
+            for h in prefer_hats:
+                htop[h].append(p)
+        htop = list(filter(lambda h: h, htop)) # filter out hats no one wants
+        
+        num_hats, num_people = len(htop), len(hats)
+        
+        if num_hats < num_people:
+            return 0
+        
+        dp[0] = 1
+        
+        for hat in range(num_hats):
+            # copy dp to dp_new, not reference to the same address
+            dp_new = dp[:]
+            for state in range(N):
+                for p in htop[hat]:
+                    if (((state >> p)) & 1) == 1: continue
+                    dp_new[state + (1<<p)] += dp[state]
+                    dp_new[state + (1<<p)] %= M
+                    
+            dp = dp_new
+        return dp[N-1]
+            

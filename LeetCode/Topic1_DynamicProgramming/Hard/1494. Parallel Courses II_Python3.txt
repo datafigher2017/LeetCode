@@ -1,0 +1,34 @@
+class Solution:
+    def minNumberOfSemesters(self, n: int, dependencies: List[List[int]], k: int) -> int:
+        # Huifeng Guan讲解： https://www.youtube.com/watch?v=g2jmxEzwtv0&feature=youtu.be
+	# Python3 效率低，n=15 的 case Time Limitation Exceeded, 找了修正的code，runtime 依然很大
+        N = (1 << n)
+        dp = [float('inf')] * N
+        prevcourse = [0] * n
+        # prerequisite = [0] * N
+        
+        for dep in dependencies:
+            prevcourse[dep[1]-1] += (1 << (dep[0]-1))
+        
+        dp[0] = 0 
+        
+        for state in range(N):
+            if dp[state] == float('inf'): continue
+            can_study = 0
+            for subject in range(n):
+                if (state >> subject) & 1 != 0: continue
+                if (state & prevcourse[subject] == prevcourse[subject]):
+                    can_study |= (1<<subject)
+
+            if (bin(can_study).count('1') <= k):
+                dp[can_study | state] = min (dp[can_study | state], dp[state] + 1)
+            else:
+                sub = can_study
+                while sub > 0:
+                    if (bin(sub).count('1') <= k):                        
+                        dp[sub | state] = min (dp[sub | state], dp[state] + 1)                  
+                    sub = ((sub - 1) & can_study)                  
+                
+        return dp[N-1]
+        
+                
