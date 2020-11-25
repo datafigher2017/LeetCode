@@ -1,0 +1,20 @@
+class Solution:
+    def nextGreaterElements(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        n2 = n * 2
+        for i in range(n):
+            nums.append(nums[i])
+        
+        results = [ -1 for _ in range(n)]
+        stack = []
+        # 递减数列不影响，遇到破坏递减数列的数才搞事情
+        for i in range(n2):
+            if (not stack) or (nums[stack[-1]] >= nums[i]):
+                stack.append(i)
+            else:
+                while (stack and nums[stack[-1]] < nums[i]):
+                    if (stack[-1] < n):
+                        results[stack[-1]] = nums[i]
+                    stack.pop()
+                stack.append(i)
+        return results
