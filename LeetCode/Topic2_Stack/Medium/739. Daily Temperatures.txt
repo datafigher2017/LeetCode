@@ -1,0 +1,18 @@
+class Solution:
+    def dailyTemperatures(self, T: List[int]) -> List[int]:
+        stack = []
+        n = len(T)
+        results = [0 for _ in range(n)]
+        #单调递减序列无影响，一旦出现大的数值破坏单调递减过程才开始用stack搞事情
+        for i in range(n):
+            if (not stack):
+                stack.append(i)
+            elif (T[i] <= T[stack[-1]]):
+                stack.append(i)
+            else:
+                while (stack and T[i] > T[stack[-1]]):
+                    results[stack[-1]] = i - stack[-1]
+                    stack.pop()
+                stack.append(i)
+        return results
+                
