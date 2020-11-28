@@ -1,0 +1,39 @@
+class Solution:
+    def sumSubarrayMins(self, arr: List[int]) -> int:
+        # previousSmaller: 前一个小于等于的数
+        # nextSmaller: 后一个小于的数
+        # 确保 2 [{3} 4 5 6 3] 1 subarray 以第一个3 为min,避免重复
+        
+        n = len(arr)
+        preSmaller = [ -1 for _ in range(n)]
+        nextSmaller = [ n for _ in range(n)]
+        
+        stack = []
+        for i in range(n):
+            while (stack) and (arr[stack[-1]] > arr[i]):
+                nextSmaller[stack[-1]] = i
+                stack.pop()
+            stack.append(i)
+        
+        while stack: stack.pop()
+        for i in range(n):
+            while (stack) and (arr[stack[-1]] > arr[i]):
+                stack.pop()
+            if stack:
+                preSmaller[i] = stack[-1]
+            stack.append(i)
+        
+        result = 0
+        M = 10**9 + 7
+        
+        for i in range(n):
+            times = (i - preSmaller[i]) * (nextSmaller[i] - i)
+            # print('i: {}; arr[i]: {}; preSmaller[i]: {}; nextSmaller[i]: {} '.format(i, arr[i], preSmaller[i], nextSmaller[i]))
+            # print('times: {}'.format(times))
+            result += arr[i] * times
+            # print('result1: {}'.format(result))
+            result %= M
+#             print('M: {}'.format(M))
+#             print('result2: {}'.format(result))        
+        return result
+        
