@@ -1,0 +1,20 @@
+class Solution:
+    def maxWidthRamp(self, A: List[int]) -> int:
+        n = len(A)
+        stack = []
+        result = 0
+        
+        # 用hanshen优秀的算法，先找出可能的i，在搜索每一个i可能对应的j的ramp，是复杂度从 O(NlogN) 降到 O(N)
+        for i in range(n):
+            if (not stack) or (A[stack[-1]] > A[i]):
+                stack.append(i)
+        # print(stack)
+        
+        
+        # j 从后往前搜，搜到一个j，不需要再往前，换一个i继续搜
+        for j in range(n - 1, -1, -1):
+            while stack and (A[stack[-1]] <= A[j]):
+                result = max(result, j - stack[-1])
+                stack.pop()
+        return result
+                
