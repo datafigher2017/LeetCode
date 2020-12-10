@@ -1,0 +1,38 @@
+class Solution:
+    def calculate(self, s: str) -> int:        
+        s = s.replace(' ', '')
+        s = '+' + s
+        n = len(s)
+        
+        if n == 0: 
+            return 0
+
+        nums = []
+        for i in range(n):
+            if s[i].isdigit():
+                continue
+            if s[i] == '+' or s[i] == '-':
+                j = i + 1
+                while(j < n and s[j].isdigit()):
+                    j += 1
+                num = int(s[i+1:j])
+                if(s[i] == '+'):
+                    nums.append(num)
+                else:
+                    nums.append(-num)
+                i = j - 1
+            elif s[i] == '*' or s[i] == '/':
+                j = i + 1
+                while(j < n and s[j].isdigit()):
+                    j += 1
+                num = int(s[i+1:j])
+                if(s[i] == '*'):
+                    nums[-1] *= num
+                else:
+                    # int division
+                    nums[-1] /= num
+                    nums[-1] = int(nums[-1])
+                i = j - 1
+        res = sum(nums)
+        return res
+        
