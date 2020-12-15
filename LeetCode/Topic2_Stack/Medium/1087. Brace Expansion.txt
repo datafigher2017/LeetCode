@@ -1,0 +1,5 @@
+class Solution:
+    def expand(self, S: str) -> List[str]:
+        A = S.replace('{', ' ').replace('}', ' ').strip().split(' ')
+        B = [sorted(a.split(',')) for a in A]
+        return [''.join(c) for c in itertools.product(*B)]
