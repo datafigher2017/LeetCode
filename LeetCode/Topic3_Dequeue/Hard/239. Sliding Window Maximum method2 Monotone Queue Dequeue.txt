@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        // time cost o(N) dequeue method
+        if (k == 0) return {};
+        
+        vector<int>rets;
+        deque<int>q;
+        
+        for(int i = 0; i < nums.size(); i++)
+        {
+            while (q.size() > 0 && nums[q.back()] <= nums[i])
+                q.pop_back();
+            q.push_back(i);
+            
+            while (q.size() > 0 && q.front() <= (i - k))
+                q.pop_front();
+            
+            if (i >= k - 1)
+                rets.push_back(nums[q.front()]);
+            
+        }
+        
+        return rets;
+    }
+};
