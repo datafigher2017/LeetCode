@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int findLatestStep(vector<int>& arr, int m) {
+        //sliding window maximum, deque
+        //keep monotonic decreasing
+        int n = arr.size();
+        arr.insert(arr.begin(), 0);
+        vector<int>day(n+1);
+        
+        if (n==m) return n;
+        for (int i=1; i<=n; i++)
+            day[arr[i]] = i;
+            
+        deque<int>dq;
+        int ret = -1;
+        
+        for (int i=1; i<=n; i++)
+        {
+            while (!dq.empty() && day[dq.back()] < day[i])
+                dq.pop_back();
+            while (!dq.empty() && i - dq.front() >= m)
+                dq.pop_front();
+            dq.push_back(i);
+            
+            if (i<m) continue;
+            
+            int t = day[dq.front()];
+            
+            int left = INT_MAX, right = INT_MAX;
+            if (i-m>=1) left = day[i-m];
+            if (i+1<=n) right = day[i+1];
+            
+            if (left > t && right > t)
+                ret = max(ret, min(left, right) -1);
+        }
+    
+        return ret;
+    }
+};
