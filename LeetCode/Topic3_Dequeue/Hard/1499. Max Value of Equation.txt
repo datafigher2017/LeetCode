@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int findMaxValueOfEquation(vector<vector<int>>& points, int k) {
+        //deque sliding window maximum time complexity O(N)
+        //fix j, search i to maximize yi + yj + max(- xi + xj)
+        int n = points.size();
+        deque<int>dq;
+        int ret = INT_MIN;
+        
+        for (int j=0; j<n; j++)
+        {
+            while (dq.size()>0 && points[j][0] - points[dq.front()][0] > k)
+                dq.pop_front();
+            if (dq.size()>0)
+                ret = max(ret, points[j][0] + points[j][1] -points[dq.front()][0] + points[dq.front()][1]);
+            while (dq.size()>0 && -points[dq.back()][0] + points[dq.back()][1] < -points[j][0] + points[j][1])
+                dq.pop_back();
+            dq.push_back(j);
+        }
+        return ret;
+    }
+};
