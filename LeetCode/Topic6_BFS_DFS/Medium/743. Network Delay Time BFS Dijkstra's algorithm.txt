@@ -1,0 +1,46 @@
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int N, int K) 
+    {
+        // BFS: Dijkstra's algorithm      
+        // https://github.com/wisdompeak/LeetCode/blob/master/BFS/743.Network-Delay-Time/743.Network-Delay-Time.cpp
+        unordered_map<int, int>EarliestTime; // node -> earliestTimes;
+        for (int i=1; i<=N; i++)
+            EarliestTime[i] = INT_MAX;
+        EarliestTime[K] = 0;
+        
+        unordered_map<int, vector<pair<int, int>>>next;
+        for (auto time: times)
+        {
+            next[time[0]].push_back({time[1], time[2]});
+        }
+        
+        queue<pair<int, int>>q; // {node, earliestTime}
+        q.push({K, 0});
+        
+        while (!q.empty())
+        {
+            int curNode = q.front().first;
+            int curTime = q.front().second;
+            q.pop();
+            //EarliestTimes may be updated in dp
+            if (curTime>EarliestTime[curNode]) continue;
+            
+            for (auto t: next[curNode])
+            {
+                int nextNode = t.first;
+                int nextTime = t.second;
+                
+                if (EarliestTime[nextNode] <= EarliestTime[curNode] + nextTime)
+                    continue;
+                EarliestTime[nextNode] = EarliestTime[curNode] + nextTime;
+                q.push({nextNode, EarliestTime[nextNode]});                
+            }
+        }
+        
+        int ret = 0;
+        for (int i=1; i<=N; i++)
+            ret = max(ret, EarliestTime[i]);
+        return (ret == INT_MAX) ? -1 : ret;
+    }
+};
