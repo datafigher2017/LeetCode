@@ -1,0 +1,50 @@
+class Solution {
+    //BFS method remove InDegree == 0 nodes
+    //remaining nodes with InDegree == 0 must be next of prior InDegree == 0 nodes
+    //if no nodes remaining after removing, there is no circle, return true
+    //otherwise, there is circle, return false
+    vector<int>InDegree;
+    vector<vector<int>>next;
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) 
+    {
+        InDegree.resize(numCourses, 0);
+        //next: next courses using cur cours as prerequisite
+        next.resize(numCourses);
+        
+        for (auto p: prerequisites)
+        {
+            next[p[1]].push_back(p[0]);
+            InDegree[p[0]] += 1;
+        }
+            
+        queue<int>q;
+        int count = 0;
+        for (int i=0; i<numCourses; i++)
+        {
+            if (InDegree[i] == 0)
+            {
+                q.push(i);
+                count += 1;
+            }
+        }
+        
+        while (!q.empty())
+        {
+            int cur = q.front();
+            q.pop();
+            for (int next: next[cur])
+            {
+                InDegree[next] -= 1;
+                if (InDegree[next] == 0)
+                {
+                    q.push(next);
+                    count += 1;
+                }
+                    
+            }
+        }
+        //check any remaining nodes after chopping
+        return count == numCourses;
+    }
+};
