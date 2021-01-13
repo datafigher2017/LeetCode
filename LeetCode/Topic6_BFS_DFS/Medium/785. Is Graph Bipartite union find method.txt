@@ -1,0 +1,45 @@
+class Solution {
+    //union find method
+    //当然，本题也可以用并查集来做。根据题意，对于graph[i]内的所有节点{j}，它们必定属于同一集合。因此我们Union每个graph[i]的点集，并查看过程中是否遇到任何矛盾。
+    //https://github.com/wisdompeak/LeetCode/tree/master/BFS/785.Is-Graph-Bipartite
+    unordered_map<int,int>Father;
+public:
+    bool isBipartite(vector<vector<int>>& graph) 
+    {
+        int N=graph.size();
+        for (int i=0; i<N; i++)
+            Father[i]=i;
+        for (int i=0; i<N; i++)
+        {
+            int k;
+            if (graph[i].size()>0)
+                k = graph[i][0];
+            
+            for (auto j:graph[i])
+            {
+                if (FindSet(i)==FindSet(j))
+                    return false;                
+                Union(k,j);
+            }
+        }
+        
+        return true;
+    }
+    
+    int FindSet(int x)
+    {
+        if (x!=Father[x])
+            Father[x]=FindSet(Father[x]);
+        return Father[x];
+    }
+    
+    void Union(int x, int y)
+    {
+        x=Father[x];
+        y=Father[y];
+        if (x<y)
+            Father[y]=x;
+        else
+            Father[x]=y;
+    }
+};
