@@ -1,0 +1,24 @@
+class Solution {
+    int visited[50001];
+public:
+    bool canReach(vector<int>& arr, int start) 
+    {
+        //DFS check is there a circle
+        //基本的搜索，DFS或者BFS均可。在DFS的过程中，任何已经访问过的节点都不需要再访问。因为它们要么是已经证实是通往dead end；要么是当前的探索路径中已经访问过的节点，再访问的话就成环会变死循环。
+        if (start<0 || start >= arr.size())
+            return false;
+        if (arr[start] == 0)
+            return true;
+        if (visited[start] == 1)
+            return false;
+        
+        visited[start] = 1;
+        if (canReach(arr, start - arr[start]))
+            return true;
+        if (canReach(arr, start + arr[start]))
+            return true;
+        
+        return false;
+        
+    }
+};
