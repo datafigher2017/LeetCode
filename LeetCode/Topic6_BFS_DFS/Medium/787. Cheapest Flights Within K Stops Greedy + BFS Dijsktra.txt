@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) 
+    {
+        // https://youtu.be/EUE27pFrC4U
+        // Greedy + BFS +PQ priority queue method, Dijsktra
+        vector<vector<vector<int>>>graph(n);
+        for (auto ticket: flights)
+            graph[ticket[0]].push_back({ticket[1], ticket[2]});
+        // visited[c][k]: the min cost arriving city c after step k
+        auto visited = vector<vector<int>>(n, vector<int>(K+2, INT_MAX/2));
+        
+        multiset<vector<int>>Set; //{cost, step, city} min cost of arriving city c by up to k step
+        Set.insert({0, 0, src});
+        
+        while (!Set.empty())
+        {
+            int cost = (*Set.begin())[0];
+            int step = (*Set.begin())[1];
+            int city = (*Set.begin())[2];
+            Set.erase(Set.begin());
+            
+            if (city == dst) return cost;
+            if (step == K+1) continue;
+            
+            for (auto ticket: graph[city])
+            {
+                if (cost + ticket[1] < visited[ticket[0]][step + 1])
+                {
+                    visited[ticket[0]][step + 1] = cost + ticket[1];
+                    Set.insert({cost + ticket[1], step + 1, ticket[0]});
+                }
+            }
+
+        }
+        return -1;
+
+    }
+};

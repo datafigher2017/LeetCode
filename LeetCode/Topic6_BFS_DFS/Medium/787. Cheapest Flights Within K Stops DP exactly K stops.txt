@@ -1,0 +1,30 @@
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) 
+    {
+        // https://youtu.be/EUE27pFrC4U
+        // DP method exactly K stops
+        // dp[k][c]: the min cost arriving to des city c by taking k stops
+        // dp[k][c] = min{dp[k-1][b] + cost[b][c]} for b = 1 to n, 
+        // ans = min(dp[k][dst]), k = 0, 1, ..., K+1
+        
+        auto dp = vector<vector<int>>(K+2, vector<int>(n, INT_MAX/2));
+        dp[0][src] = 0;
+        
+        for (int k=1; k<=K+1; k++)
+            for (auto flight: flights)
+            {
+                int start = flight[0];
+                int c = flight[1];
+                int cost = flight[2];
+                dp[k][c] = min(dp[k][c], dp[k-1][start] + cost);                
+            }
+        
+        int ret = INT_MAX;
+        for (int k=0; k<=K+1; k++)
+            ret = min(ret, dp[k][dst]);
+        
+        return (ret >= INT_MAX/2)? -1: ret;
+    }
+};
