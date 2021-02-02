@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) 
+    {
+        //Bitmask
+        int size = nums.size();
+        int bits = 1 << size;
+        vector<vector<int>> ans(bits);
+        
+        for (int i = 1; i < bits; i++) 
+        {
+            for (int j = 0; j < size; j++) 
+            {
+                if ((i >> j) & 1) 
+                {
+                    ans[i].push_back(nums[j]);
+                }
+            }
+        }
+
+        return ans;
+    }
+};
