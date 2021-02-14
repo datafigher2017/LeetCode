@@ -1,0 +1,29 @@
+class Solution {
+    vector<vector<int>>rets;
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        //DFS  https://www.youtube.com/watch?v=2ztZJLDp4QE&feature=youtu.be
+        // DFS(k, n, cur: starting integer, sum, comb)
+        vector<int>comb;
+        DFS(k, n, 1, 0, comb);
+        return rets;        
+    }
+    
+    void DFS(int k, int n, int cur, int sum, vector<int>&comb)
+    {
+        if (comb.size()>k) return;
+        if (sum > n) return;
+        if (comb.size() == k && sum == n)
+        {
+            rets.push_back(comb);
+            return;
+        }
+        
+        for (int i=cur; i<=9; i++)
+        {
+            comb.push_back(i);
+            DFS(k, n, i+1, sum+i, comb);
+            comb.pop_back();
+        }
+    }
+};
