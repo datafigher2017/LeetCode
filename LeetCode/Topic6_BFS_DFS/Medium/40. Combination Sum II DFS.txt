@@ -1,0 +1,37 @@
+class Solution {
+    vector<vector<int>>rets;
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        //https://www.youtube.com/watch?v=IEh2ATqiH_0&feature=youtu.be
+        //DFS
+        //相同的数字，必须按照顺序，第一个取用了，采取用第二个，不能跳着
+        sort(candidates.begin(), candidates.end());
+        vector<int>comb = {};
+        DFS(candidates, target, 0, 0, comb);
+        return rets;
+    }
+    
+    void DFS(vector<int>&candidates, int target,  int idx, int sum, vector<int>&comb)
+    {
+        if (target == sum)
+        {
+            rets.push_back(comb);
+            return;
+        }
+        if (sum > target)
+            return;
+        
+        for (int i=idx; i<candidates.size(); i++)
+        {
+            // key condition, 3 [3 3 1 1]  idx=1, i=idx=1, 第2个三，可以取，因为第一个3已经取过了，
+            // i = 2 > idx, 第3个3，不能取，因为第二个3还没取过
+            if (i>idx && candidates[i] == candidates[i-1])
+                continue;
+            
+            comb.push_back(candidates[i]);
+            DFS(candidates, target, i+1, sum+candidates[i], comb);
+            comb.pop_back();
+                
+        }
+    }
+};
